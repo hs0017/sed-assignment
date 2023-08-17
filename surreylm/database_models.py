@@ -28,13 +28,6 @@ class Vendor(db.Model):
     email = db.Column(db.Text)
 
 
-class Lab(db.Model):
-    __tablename__ = 'labs'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text)
-    room = db.Column(db.Text)
-
-
 class Software(db.Model):
     __tablename__ = 'software'
     id = db.Column(db.Integer, primary_key=True)
@@ -45,9 +38,3 @@ class Software(db.Model):
     academic_id = db.Column(db.Integer, db.ForeignKey('academics.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-
-class SoftwareLab(db.Model):
-    __tablename__ = 'software_labs'
-    id = db.Column(db.Integer, primary_key=True)
-    software_id = db.Column(db.Integer, db.ForeignKey('software.id'))
-    lab_id = db.Column(db.Integer, db.ForeignKey('labs.id'))
