@@ -1,6 +1,8 @@
 from . import db
+from flask_login import UserMixin
 
-class User(db.Model):
+
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.Text, unique=True)
@@ -10,8 +12,8 @@ class User(db.Model):
     admin = db.Column(db.Boolean, default=False)
 
 
-class Academic(db.Model):
-    __tablename__ = 'academics'
+class Software_owner(db.Model):
+    __tablename__ = 'software_owners'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.Text, unique=True)
     first_name = db.Column(db.Text)
@@ -35,6 +37,6 @@ class Software(db.Model):
     version = db.Column(db.Text)
     license_expiry = db.Column(db.DateTime)
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendors.id'))
-    academic_id = db.Column(db.Integer, db.ForeignKey('academics.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
+    vendor = db.relationship('Vendor', backref='software')
+    academic_id = db.Column(db.Integer, db.ForeignKey('software_owners.id'))
+    owner = db.relationship('Software_owner', backref='software')
