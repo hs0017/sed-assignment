@@ -18,8 +18,7 @@ class Software_owner(db.Model):
     email = db.Column(db.Text, unique=True)
     first_name = db.Column(db.Text)
     last_name = db.Column(db.Text)
-    password = db.Column(db.Text)
-    phone_extension = db.Column(db.Integer)
+    phone_extension = db.Column(db.Text)
 
 
 class Vendor(db.Model):
