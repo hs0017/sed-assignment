@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block title %}Add License{% endblock %} {% block content
+%}
+<form method="POST">
+    <h3 align="center">Add new software License:</h3>
+    <div class="form-group">
+        <label for="name">Software Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          placeholder="Enter software name"
+        />
+</div>
+    <div class="form-group">
+        <label for="version">Software Version</label>
+        <input
+          type="text"
+          class="form-control"
+          id="version"
+          name="version"
+          placeholder="Enter last name"
+        />
+    <div class="form-group">
+        <label for="expiry_date">License Expiry Date</label>
+        <input
+          type="date"
+          class="form-control"
+          id="expiry_date"
+          name="expiry_date"
+          placeholder="Enter license expiry date"
+        />
+    <div class="form-group">
+      <label for="vendor">Manufacturer</label>
+      <select id="vendor" name="vendor" class="form-control">
+        <option selected>Choose...</option>
+        {% for vendor in vendors %}
+        <option>{{vendor.id}}. {{vendor.name}}</option>
+            {% endfor %}
+      </select>
+    </div>
+     <div class="form-group">
+      <label for="owner">Owner</label>
+      <select id="owner" name="owner" class="form-control">
+        <option selected>Choose...</option>
+        {% for owner in owners %}
+        <option>{{owner.id}}. {{owner.first_name}} {{owner.last_name}}</option>
+          {% endfor %}
+      </select>
+      </div>
+<br />
+<button type="submit" class="btn btn-primary">Register</button>
+</form>
+  {% endblock %}

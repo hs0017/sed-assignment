@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import func
@@ -11,7 +13,8 @@ views = Blueprint('views', __name__)
 @views.route('/')
 @login_required
 def home():
-    return render_template("home.html", user=current_user)
+    software = Software.query.all()
+    return render_template("home.html", user=current_user, software=software)
 
 
 # @views.route('/edit_software')
@@ -85,3 +88,38 @@ def add_vendor():
             flash('Owner added!', category='success')
             return redirect(url_for('views.home'))
     return render_template("add_owner.html", user=current_user)
+
+
+@views.route('/add_software', methods=['GET', 'POST'])
+@login_required
+def add_software():
+    vendors = Vendor.query.all()
+    owners = Software_owner.query.all()
+
+    if request.method == 'POST':
+        name = request.form.get('name')
+        version = request.form.get('version')
+        license_expiry = request.form.get('expiry_date')
+        vendor = request.form.get('vendor')
+        vendor_id = vendor.split('.')[0]
+        owner = request.form.get('owner')
+        owner_id = owner.split('.')[0]
+        year, month, day = license_expiry.split('-')
+        converted_date = datetime.date(int(year), int(month), int(day))
+
+        software = Software.query.filter(func.lower(Software.name) == func.lower(name)).first()
+
+        if software:
+            flash('Software already exists.', category='error')
+        elif len(name) < 1:
+            flash('Software name must be greater than 0 characters.', category='error')
+        elif len(version) < 1:
+            flash('Software version must be greater than 0 characters.', category='error')
+        else:
+            new_software = Software(name=name, version=version, license_expiry=converted_date, vendor_id=vendor_id,
+                                    academic_id=owner_id)
+            db.session.add(new_software)
+            db.session.commit()
+            flash('Software added!', category='success')
+            return redirect(url_for('views.home'))
+    return render_template("add_license.html", user=current_user, vendors=vendors, owners=owners)

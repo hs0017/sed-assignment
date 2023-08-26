@@ -41,10 +41,3 @@ def create_database(app):
         db.create_all(app=app)
         print('Created Database!')
 
-    # with app.app_context():
-    #    db.create_all()
-
-    #  default_user = User(email='example@cat.com', first_name='Default', last_name='Admin', password='password',
-    #                     admin=True)
-    # db.session.add(default_user)
-    # db.session.commit()

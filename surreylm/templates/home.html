@@ -1,7 +1,8 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %}
 
 {% block content %}
-<table class="table-striped">
+<a href="/add_owner" class="btn btn-secondary my-3">Add owner</a> <a href="/add_vendor" class="btn btn-secondary my-3">Add manufacturer</a> <a href="/add_software" class="btn btn-secondary my-3">Add license</a>
+<table class="table table-striped">
   <caption>List of software</caption>
   <thead>
     <tr>
@@ -15,17 +16,18 @@
   <tbody>
     {% for software in software %}
     <tr>
-      <td>{{software.name}} </td>
+      <td>{{software.name}}</td>
       <td>{{software.version}} </td>
-      <td>{{software.expiry_date}} </td>
-      <td>{{software.publisher.name}} </td>
+      <td>{{software.license_expiry}} </td>
+      <td>{{software.vendor.name}} </td>
       <td>{{software.owner.first_name}} {{software.owner.last_name}}</td>
       <td>
-        <a href="/edit/{{software.id}}" class="btn btn-primary">Edit</a>
+        <a href="/edit/{{software.id}}" class="btn btn-warning">Edit</a>
+        {% if current_user.admin %}
         <a href="/delete/{{software.id}}" class="btn btn-danger">Delete</a>
+        {% endif %}
     </tr>
     {% endfor %}
   </tbody>
 </table>
 {% endblock %}
-```
