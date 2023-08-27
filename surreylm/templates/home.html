@@ -24,7 +24,7 @@
       <td>
         <a href="/edit/{{software.id}}" class="btn btn-warning">Edit</a>
         {% if current_user.admin %}
-        <a href="/delete/{{software.id}}" class="btn btn-danger">Delete</a>
+        <a href="/delete_software/{{software.id}}" class="btn btn-danger">Delete</a>
         {% endif %}
     </tr>
     {% endfor %}

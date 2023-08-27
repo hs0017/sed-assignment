@@ -47,6 +47,8 @@ def add_owner():
             flash('Email must be greater than 3 characters.', category='error')
         elif not phone.isnumeric():
             flash('Phone number can only contain numeric characters.', category='error')
+        elif len(phone) != 11:
+            flash('Phone number must be 11 digits.', category='error')
         else:
             new_vendor = Vendor(name=name, phone=phone, email=email)
             db.session.add(new_vendor)
@@ -123,3 +125,17 @@ def add_software():
             flash('Software added!', category='success')
             return redirect(url_for('views.home'))
     return render_template("add_license.html", user=current_user, vendors=vendors, owners=owners)
+
+
+@views.route('/delete_software/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_software(id):
+    software = Software.query.get_or_404(id)
+    if current_user.admin:
+        db.session.delete(software)
+        db.session.commit()
+        flash('Software deleted!', category='success')
+        return redirect(url_for('views.home'))
+    else:
+        flash('You do not have permission to delete software.', category='error')
+        return redirect(url_for('views.home'))
