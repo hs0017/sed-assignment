@@ -3,7 +3,6 @@
 {% block content %}
 <a href="/add_owner" class="btn btn-secondary my-3">Add owner</a> <a href="/add_vendor" class="btn btn-secondary my-3">Add manufacturer</a> <a href="/add_software" class="btn btn-secondary my-3">Add license</a>
 <table class="table table-striped">
-  <caption>List of software</caption>
   <thead>
     <tr>
       <th scope="col">Name</th>
@@ -22,7 +21,7 @@
       <td>{{software.vendor.name}} </td>
       <td>{{software.owner.first_name}} {{software.owner.last_name}}</td>
       <td>
-        <a href="/edit/{{software.id}}" class="btn btn-warning">Edit</a>
+        <a href="/edit_software/{{software.id}}" class="btn btn-warning">Edit</a>
         {% if current_user.admin %}
         <a href="/delete_software/{{software.id}}" class="btn btn-danger">Delete</a>
         {% endif %}

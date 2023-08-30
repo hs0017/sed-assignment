@@ -17,19 +17,46 @@ def home():
     return render_template("home.html", user=current_user, software=software)
 
 
-# @views.route('/edit_software')
-# @login_required
-# def edit():
-#     return render_template("edit_software.html", user=current_user)
-#
-# @views.route('/add_software')
-# @login_required
-# def add():
-#     return render_template("add_software.html", user=current_user)
+@views.route('/edit_software/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_software(id):
+    software = Software.query.get_or_404(id)
+    current_vendor = str(software.vendor_id) + '. ' + software.vendor.name
+    current_date = software.license_expiry.strftime('%Y-%m-%d')
+    vendors = Vendor.query.all()
+    owners = Software_owner.query.all()
+    current_owner = str(software.academic_id) + '. ' + software.owner.first_name + ' ' + software.owner.last_name
+    if request.method == 'POST':
+        name = request.form.get('name')
+        version = request.form.get('version')
+        license_expiry = request.form.get('expiry_date')
+        vendor = request.form.get('vendor')
+        vendor_id = vendor.split('.')[0]
+        owner = request.form.get('owner')
+        owner_id = owner.split('.')[0]
+        year, month, day = license_expiry.split('-')
+        converted_date = datetime.date(int(year), int(month), int(day))
+
+        if len(name) < 1:
+            flash('Software name must be greater than 0 characters.', category='error')
+        elif len(version) < 1:
+            flash('Software version must be greater than 0 characters.', category='error')
+        else:
+            software.name = name
+            software.version = version
+            software.license_expiry = converted_date
+            software.vendor_id = vendor_id
+            software.academic_id = owner_id
+            db.session.commit()
+            flash('Software updated!', category='success')
+            return redirect(url_for('views.home'))
+    return render_template("edit_software.html", user=current_user, software=software, vendors=vendors, owners=owners,
+                           current_vendor=current_vendor, current_owner=current_owner, current_date=current_date)
+
 
 @views.route('/add_vendor', methods=['GET', 'POST'])
 @login_required
-def add_owner():
+def add_vendor():
     if request.method == 'POST':
         name = request.form.get('name')
         phone = request.form.get('phone')
@@ -61,7 +88,7 @@ def add_owner():
 
 @views.route('/add_owner', methods=['GET', 'POST'])
 @login_required
-def add_vendor():
+def add_owner():
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('first_name')

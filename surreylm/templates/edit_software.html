@@ -1,7 +1,7 @@
-{% extends "base.html" %} {% block title %}Add License{% endblock %} {% block content
+{% extends "base.html" %} {% block title %}Edit License{% endblock %} {% block content
 %}
 <form method="POST">
-    <h3 align="center">Add New Software License:</h3>
+    <h3 align="center">Edit Software License:</h3>
     <div class="form-group">
         <label for="name">Software Name</label>
         <input
@@ -9,6 +9,7 @@
           class="form-control"
           id="name"
           name="name"
+          value="{{software.name}}"
           placeholder="Enter software name"
         />
 </div>
@@ -19,6 +20,7 @@
           class="form-control"
           id="version"
           name="version"
+          value="{{software.version}}"
           placeholder="Enter last name"
         />
     <div class="form-group">
@@ -28,12 +30,13 @@
           class="form-control"
           id="expiry_date"
           name="expiry_date"
+          value="{{current_date}}"
           placeholder="Enter license expiry date"
         />
     <div class="form-group">
       <label for="vendor">Manufacturer</label>
       <select id="vendor" name="vendor" class="form-control">
-        <option selected>Choose...</option>
+        <option selected>{{current_vendor}}</option>
         {% for vendor in vendors %}
         <option>{{vendor.id}}. {{vendor.name}}</option>
             {% endfor %}
@@ -42,7 +45,7 @@
      <div class="form-group">
       <label for="owner">Owner</label>
       <select id="owner" name="owner" class="form-control">
-        <option selected>Choose...</option>
+        <option selected>{{current_owner}}</option>
         {% for owner in owners %}
         <option>{{owner.id}}. {{owner.first_name}} {{owner.last_name}}</option>
           {% endfor %}
