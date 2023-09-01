@@ -1,0 +1,9 @@
+{% extends "base.html" %} {% block title %}View Owner Information{% endblock %} {% block content
+%}
+<div class="container-sm">
+<h2 align="center">Contact Information:</h2>
+<h5>Name: {{owner.first_name}} {{owner.last_name}}</h5>
+<h5>Email: {{owner.email}}</h5>
+<h5>Phone Extension: {{owner.phone_extension}}</h5>
+</div>
+{% endblock %}
