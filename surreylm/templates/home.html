@@ -18,12 +18,33 @@
       <td>{{software.name}}</td>
       <td>{{software.version}} </td>
       <td>{{software.license_expiry}} </td>
-      <td>{{software.vendor.name}} </td>
-      <td>{{software.owner.first_name}} {{software.owner.last_name}}</td>
+      <td><a href="/view_vendor/{{software.vendor_id}}">{{software.vendor.name}}</a></td>
+      <td><a href="/view_owner/{{software.academic_id}}">{{software.owner.first_name}} {{software.owner.last_name}}</a></td>
       <td>
         <a href="/edit_software/{{software.id}}" class="btn btn-warning">Edit</a>
         {% if current_user.admin %}
-        <a href="/delete_software/{{software.id}}" class="btn btn-danger">Delete</a>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteconfirm{{software.id}}">
+            Delete
+        </button>
+        <div class="modal fade" id="deleteconfirm{{software.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteconfirmLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteconfirmLabel">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete {{software.name}} {{software.version}}?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                 <a href="/delete_software/{{software.id}}" class="btn btn-danger">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
         {% endif %}
     </tr>
     {% endfor %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %} {% block title %}View Vendor Information{% endblock %} {% block content
+%}
+<div class="container-sm">
+<h2 align="center">Vendor Contact Information:</h2>
+<h5>Name: {{vendor.name}}</h5>
+<h5>Email: {{vendor.email}}</h5>
+<h5>Phone number: {{vendor.phone}}</h5>
+</div>
+{% endblock %}

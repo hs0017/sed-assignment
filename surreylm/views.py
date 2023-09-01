@@ -21,19 +21,19 @@ def home():
 @login_required
 def edit_software(id):
     software = Software.query.get_or_404(id)
-    current_vendor = str(software.vendor_id) + '. ' + software.vendor.name
+    current_vendor = software.vendor.name
+    current_vendor_id = software.vendor.id
     current_date = software.license_expiry.strftime('%Y-%m-%d')
     vendors = Vendor.query.all()
     owners = Software_owner.query.all()
-    current_owner = str(software.academic_id) + '. ' + software.owner.first_name + ' ' + software.owner.last_name
+    current_owner = software.owner.first_name + ' ' + software.owner.last_name
+    current_owner_id = software.owner.id
     if request.method == 'POST':
         name = request.form.get('name')
         version = request.form.get('version')
         license_expiry = request.form.get('expiry_date')
         vendor = request.form.get('vendor')
-        vendor_id = vendor.split('.')[0]
         owner = request.form.get('owner')
-        owner_id = owner.split('.')[0]
         year, month, day = license_expiry.split('-')
         converted_date = datetime.date(int(year), int(month), int(day))
 
@@ -45,13 +45,13 @@ def edit_software(id):
             software.name = name
             software.version = version
             software.license_expiry = converted_date
-            software.vendor_id = vendor_id
-            software.academic_id = owner_id
+            software.vendor_id = vendor
+            software.academic_id = owner
             db.session.commit()
             flash('Software updated!', category='success')
             return redirect(url_for('views.home'))
     return render_template("edit_software.html", user=current_user, software=software, vendors=vendors, owners=owners,
-                           current_vendor=current_vendor, current_owner=current_owner, current_date=current_date)
+                           current_vendor=current_vendor, current_owner=current_owner, current_date=current_date, current_vendor_id=current_vendor_id, current_owner_id=current_owner_id)
 
 
 @views.route('/add_vendor', methods=['GET', 'POST'])
@@ -63,8 +63,6 @@ def add_vendor():
         email = request.form.get('email')
 
         vendor = Vendor.query.filter(func.lower(Vendor.name) == func.lower(name)).first()
-
-        print(vendor)
 
         if vendor:
             flash('Manufacturer already exists.', category='error')
@@ -130,9 +128,7 @@ def add_software():
         version = request.form.get('version')
         license_expiry = request.form.get('expiry_date')
         vendor = request.form.get('vendor')
-        vendor_id = vendor.split('.')[0]
         owner = request.form.get('owner')
-        owner_id = owner.split('.')[0]
         year, month, day = license_expiry.split('-')
         converted_date = datetime.date(int(year), int(month), int(day))
 
@@ -145,8 +141,8 @@ def add_software():
         elif len(version) < 1:
             flash('Software version must be greater than 0 characters.', category='error')
         else:
-            new_software = Software(name=name, version=version, license_expiry=converted_date, vendor_id=vendor_id,
-                                    academic_id=owner_id)
+            new_software = Software(name=name, version=version, license_expiry=converted_date, vendor_id=vendor,
+                                    academic_id=owner)
             db.session.add(new_software)
             db.session.commit()
             flash('Software added!', category='success')
@@ -166,3 +162,19 @@ def delete_software(id):
     else:
         flash('You do not have permission to delete software.', category='error')
         return redirect(url_for('views.home'))
+
+
+@views.route('/view_owner/<int:id>', methods=['GET', 'POST'])
+@login_required
+def view_owner(id):
+    software = Software.query.filter_by(academic_id=id).all()
+    owner = Software_owner.query.get_or_404(id)
+    return render_template("view_owner.html", user=current_user, owner=owner, software=software)
+
+@views.route('/view_vendor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def view_vendor(id):
+    software = Software.query.filter_by(vendor_id=id).all()
+    vendor = Vendor.query.get_or_404(id)
+    return render_template("view_vendor.html", user=current_user, vendor=vendor, software=software)
+
