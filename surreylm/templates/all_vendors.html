@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block title %}All Vendors{% endblock %}
+
+{% block content %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for vendors in vendors %}
+    <tr>
+      <td>{{vendors.name}}</td>
+      <td>{{vendors.email}}</td>
+      <td>{{vendors.phone}}</td>
+      <td>
+        <a href="/edit_vendor/{{vendors.id}}" class="btn btn-warning">Edit</a>
+        {% if current_user.admin %}
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteconfirm{{vendors.id}}">
+            Delete
+        </button>
+        <div class="modal fade" id="deleteconfirm{{vendors.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteconfirmLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteconfirmLabel">Please Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete {{vendors.name}}?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                 <a href="/delete_vendor/{{vendors.id}}" class="btn btn-danger">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

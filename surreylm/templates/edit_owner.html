@@ -1,0 +1,51 @@
+{% extends "base.html" %} {% block title %}Edit License Owner{% endblock %} {% block content
+%}
+<form method="POST">
+    <h3 align="center">Edit Owner Contact Information:</h3>
+    <div class="form-group">
+        <label for="first_name">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="first_name"
+          name="first_name"
+          value="{{owner.first_name}}"
+          placeholder="Enter software name"
+        />
+</div>
+    <div class="form-group">
+        <label for="last_name">Last Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="last_name"
+          name="last_name"
+          value="{{owner.last_name}}"
+          placeholder="Enter last name"
+        />
+</div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="text"
+          class="form-control"
+          id="email"
+          name="email"
+          value="{{owner.email}}"
+          placeholder="Enter last name"
+        />
+ </div>
+    <div class="form-group">
+        <label for="phone_extension">Phone Extension</label>
+        <input
+          type="text"
+          class="form-control"
+          id="phone_extension"
+          name="phone_extension"
+          value="{{owner.phone_extension}}"
+          placeholder="Enter last name"
+        />
+ <br />
+<button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+ {% endblock %}

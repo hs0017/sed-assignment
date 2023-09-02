@@ -178,3 +178,76 @@ def view_vendor(id):
     vendor = Vendor.query.get_or_404(id)
     return render_template("view_vendor.html", user=current_user, vendor=vendor, software=software)
 
+@views.route('/edit_owner/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_owner(id):
+    owner = Software_owner.query.get_or_404(id)
+    if request.method == 'POST':
+        email = request.form.get('email')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        phone_extension = request.form.get('phone_extension')
+
+        owner.email = email
+        owner.first_name = first_name
+        owner.last_name = last_name
+        owner.phone_extension = phone_extension
+        db.session.commit()
+        flash('Owner updated!', category='success')
+        return redirect(url_for('views.view_owner', id=id))
+    return render_template("edit_owner.html", user=current_user, owner=owner)
+
+@views.route('/edit_vendor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_vendor(id):
+    vendor = Vendor.query.get_or_404(id)
+    if request.method == 'POST':
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+
+        vendor.name = name
+        vendor.phone = phone
+        vendor.email = email
+        db.session.commit()
+        flash('Manufacturer updated!', category='success')
+        return redirect(url_for('views.view_vendor', id=id))
+    return render_template("edit_vendor.html", user=current_user, vendor=vendor)
+
+@views.route('/all_owners', methods=['GET', 'POST'])
+@login_required
+def all_owners():
+    owners = Software_owner.query.all()
+    return render_template("all_owners.html", user=current_user, owners=owners)
+
+@views.route('/delete_owner/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_owner(id):
+    owner= Software_owner.query.get_or_404(id)
+    if current_user.admin:
+        db.session.delete(owner)
+        db.session.commit()
+        flash('Owner deleted!', category='success')
+        return redirect(url_for('views.all_owners'))
+    else:
+        flash('You do not have permission to delete owners.', category='error')
+        return redirect(url_for('views.all_owners'))
+
+@views.route('/all_vendors', methods=['GET', 'POST'])
+@login_required
+def all_vendors():
+    vendors = Vendor.query.all()
+    return render_template("all_vendors.html", user=current_user, vendors=vendors)
+
+@views.route('/delete_vendor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_vendor(id):
+    vendor = Vendor.query.get_or_404(id)
+    if current_user.admin:
+        db.session.delete(vendor)
+        db.session.commit()
+        flash('Manufacturer deleted!', category='success')
+        return redirect(url_for('views.all_vendors'))
+    else:
+        flash('You do not have permission to delete manufacturers.', category='error')
+        return redirect(url_for('views.all_vendors'))

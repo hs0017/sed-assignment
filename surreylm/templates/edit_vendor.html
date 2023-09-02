@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block title %}Edit Vendor Information{% endblock %} {% block content
+%}
+<form method="POST">
+    <h3 align="center">Edit Vendor Contact Information:</h3>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          value="{{vendor.name}}"
+          placeholder="Enter vendor name"
+        />
+</div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="text"
+          class="form-control"
+          id="email"
+          name="email"
+          value="{{vendor.email}}"
+          placeholder="Enter email address"
+        />
+</div>
+    <div class="form-group">
+        <label for="phone">Email</label>
+        <input
+          type="text"
+          class="form-control"
+          id="phone"
+          name="phone"
+          value="{{vendor.phone}}"
+          placeholder="Enter phone number"
+        />
+ <br />
+<button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+ {% endblock %}
