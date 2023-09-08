@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block title %}All Vendors{% endblock %}
 
 {% block content %}
+<a href="/add_vendor" class="btn btn-secondary my-3">Add vendor</a>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -13,7 +14,7 @@
     {% for vendors in vendors %}
     <tr>
       <td>{{vendors.name}}</td>
-      <td>{{vendors.email}}</td>
+      <td><a href="mailto:{{vendors.email}}" target="_blank" >{{vendors.email}}</a></td>
       <td>{{vendors.phone}}</td>
       <td>
         <a href="/edit_vendor/{{vendors.id}}" class="btn btn-warning">Edit</a>

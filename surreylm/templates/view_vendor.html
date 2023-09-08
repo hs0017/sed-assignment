@@ -3,7 +3,7 @@
 <div class="container-sm">
 <h2 align="center">Vendor Contact Information:</h2>
 <h5>Name: {{vendor.name}}</h5>
-<h5>Email: {{vendor.email}}</h5>
+<h5>Email: <a href="mailto:{{vendor.email}}" target="_blank" >{{vendor.email}}</a></h5>
 <h5>Phone number: {{vendor.phone}}</h5>
 </div>
 <a href="/edit_vendor/{{vendor.id}}" class="btn btn-warning">Edit</a>

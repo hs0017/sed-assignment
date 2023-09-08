@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block title %}All Owners{% endblock %}
 
 {% block content %}
+<a href="/add_owner" class="btn btn-secondary my-3">Add owner</a>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -13,7 +14,7 @@
     {% for owners in owners %}
     <tr>
       <td>{{owners.first_name}} {{owners.last_name}}</td>
-      <td>{{owners.email}} </td>
+      <td><a href="mailto:{{owners.email}}" target="_blank" >{{owners.email}}</a></td>
       <td>{{owners.phone_extension}} </td>
       <td>
         <a href="/edit_owner/{{owners.id}}" class="btn btn-warning">Edit</a>

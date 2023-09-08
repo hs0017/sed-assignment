@@ -1,13 +1,14 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %}
 
 {% block content %}
-<a href="/add_owner" class="btn btn-secondary my-3">Add owner</a> <a href="/add_vendor" class="btn btn-secondary my-3">Add manufacturer</a> <a href="/add_software" class="btn btn-secondary my-3">Add license</a>
+<a href="/add_owner" class="btn btn-secondary my-3">Add owner</a> <a href="/add_vendor" class="btn btn-secondary my-3">Add vendor</a> <a href="/add_software" class="btn btn-secondary my-3">Add license</a>
 <table class="table table-striped">
   <thead>
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Version</th>
       <th scope="col">Expiry Date</th>
+      <th scope="col">Status</th>
       <th scope="col">Publisher</th>
       <th scope="col">Owner</th>
     </tr>
@@ -18,8 +19,15 @@
       <td>{{software.name}}</td>
       <td>{{software.version}} </td>
       <td>{{software.license_expiry}} </td>
+      {% if software.license_expiry < today %}
+        <td><span class="badge badge-danger">Expired</span></td>
+      {% elif software.license_expiry < add_month %}
+        <td><span class="badge badge-warning">Expiring Soon</span></td>
+      {% else %}
+        <td><span class="badge badge-success">Ok</span></td>
+      {% endif %}
       <td><a href="/view_vendor/{{software.vendor_id}}">{{software.vendor.name}}</a></td>
-      <td><a href="/view_owner/{{software.academic_id}}">{{software.owner.first_name}} {{software.owner.last_name}}</a></td>
+      <td><a href="/view_owner/{{software.owner_id}}">{{software.owner.first_name}} {{software.owner.last_name}}</a></td>
       <td>
         <a href="/edit_software/{{software.id}}" class="btn btn-warning">Edit</a>
         {% if current_user.admin %}

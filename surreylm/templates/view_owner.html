@@ -3,7 +3,7 @@
 <div class="container-sm">
 <h2 align="center">Contact Information:</h2>
 <h5>Name: {{owner.first_name}} {{owner.last_name}}</h5>
-<h5>Email: {{owner.email}}</h5>
+<h5>Email: <a href="mailto:{{owner.email}}" target="_blank" >{{owner.email}}</a></h5>
 <h5>Phone Extension: {{owner.phone_extension}}</h5>
 </div>
 <a href="/edit_owner/{{owner.id}}" class="btn btn-warning">Edit</a>
