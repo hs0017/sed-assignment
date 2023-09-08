@@ -44,14 +44,12 @@ code blocks for commands
 
 ## Help
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
+If you encounter errors, then please check the errorlog.txt file. 
+
+You can also [Submit an issue](https://github.com/hs0017/sea-assignment/issues)
 
 ## Authors
 
 Contributors names and contact info
 
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+* Holly Sherlock - [LinkedIn](https://www.linkedin.com/in/holly-sherlock/)
