@@ -6,9 +6,10 @@ import datetime
 from dateutil import relativedelta
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from sqlalchemy import func, exc, case
+from sqlalchemy import func, exc
 from . import db
 from surreylm.database_models import Vendor, Software_owner, Software
+from surreylm.validations import Validate
 
 
 views = Blueprint('views', __name__) # Creates a Blueprint object called 'views'.
@@ -47,16 +48,22 @@ def edit_software(id):
     owners = Software_owner.query.all()
     current_owner = software.owner.first_name + ' ' + software.owner.last_name
     current_owner_id = software.owner.id
+
     if request.method == 'POST':
         name = request.form.get('name')
         version = request.form.get('version')
         license_expiry = request.form.get('expiry_date')
         vendor = request.form.get('vendor')
         owner = request.form.get('owner')
-        if len(name) < 1:
-            flash('Software name must be greater than 0 characters.', category='error')
-        elif len(version) < 1:
-            flash('Software version must be greater than 0 characters.', category='error')
+
+        software_name_valid = Validate.generic_entry(name)
+        software_version_valid = Validate.generic_entry(version)
+
+        if not software_name_valid or not software_version_valid:
+            return render_template("edit_software.html", user=current_user, software=software,
+                                   vendors=vendors, owners=owners, current_vendor=current_vendor,
+                                   current_owner=current_owner, current_date=current_date,
+                                   current_vendor_id=current_vendor_id, current_owner_id=current_owner_id)
         else:
             year, month, day = license_expiry.split('-')
             converted_date = datetime.date(int(year), int(month), int(day))
@@ -87,17 +94,14 @@ def add_vendor():
         email = request.form.get('email')
 
         vendor = Vendor.query.filter(func.lower(Vendor.name) == func.lower(name)).first()
+        vendor_name_valid = Validate.generic_entry(name)
+        vendor_phone_valid = Validate.phone_number(phone)
+        vendor_email_valid = Validate.email(email)
 
         if vendor:
             flash('Vendor already exists.', category='error')
-        elif len(name) < 4:
-            flash('Vendor name must be greater than 3 characters.', category='error')
-        elif len(email) < 4:
-            flash('Email must be greater than 3 characters.', category='error')
-        elif not phone.isnumeric():
-            flash('Phone number can only contain numeric characters.', category='error')
-        elif len(phone) != 11:
-            flash('Phone number must be 11 digits.', category='error')
+        elif not vendor_name_valid or not vendor_phone_valid or not vendor_email_valid:
+            return render_template("add_manufacturer.html", user=current_user)
         else:
             new_vendor = Vendor(name=name, phone=phone, email=email)
             db.session.add(new_vendor)
@@ -122,19 +126,14 @@ def add_owner():
         phone_extension = request.form.get('phone_extension')
 
         owner = Software_owner.query.filter(func.lower(Software_owner.email) == func.lower(email)).first()
+        owner_name_valid = Validate.people_name(first_name, last_name)
+        owner_email_valid = Validate.email(email)
+        owner_phone_ext_valid = Validate.phone_ext(phone_extension)
 
         if owner:
             flash('Software owner already exists.', category='error')
-        elif not first_name.isalpha():
-            flash('Owner name must not contain numbers', category='error')
-        elif not last_name.isalpha():
-            flash('Owner name must not contain numbers', category='error')
-        elif len(email) < 4:
-            flash('Email must be greater than 3 characters.', category='error')
-        elif not phone_extension.isnumeric():
-            flash('Phone extension can only contain numeric characters.', category='error')
-        elif len(phone_extension) != 4:
-            flash('Phone extension must be 4 digits.', category='error')
+        elif not owner_name_valid or not owner_email_valid or not owner_phone_ext_valid:
+            return render_template("add_owner.html", user=current_user)
         else:
             new_owner = Software_owner(email=email, first_name=first_name, last_name=last_name,
                                        phone_extension=phone_extension)
@@ -161,13 +160,12 @@ def add_software():
         license_expiry = request.form.get('expiry_date')
         vendor = request.form.get('vendor')
         owner = request.form.get('owner')
-        software = Software.query.filter(func.lower(Software.name) == func.lower(name)).first()
-        if software:
-            flash('Software already exists.', category='error')
-        elif len(name) < 1:
-            flash('Software name must be greater than 0 characters.', category='error')
-        elif len(version) < 1:
-            flash('Software version must be greater than 0 characters.', category='error')
+
+        software_name_valid = Validate.generic_entry(name)
+        software_version_valid = Validate.generic_entry(version)
+
+        if not software_name_valid or not software_version_valid:
+            return render_template("add_license.html", user=current_user, vendors=vendors, owners=owners)
         elif license_expiry == '':
             flash('Please enter a license expiry date.', category='error')
         elif vendor == 'Choose...':
@@ -246,6 +244,13 @@ def edit_owner(id):
         last_name = request.form.get('last_name')
         phone_extension = request.form.get('phone_extension')
 
+        owner_name_valid = Validate.people_name(first_name, last_name)
+        owner_email_valid = Validate.email(email)
+        owner_phone_ext_valid = Validate.phone_ext(phone_extension)
+
+        if not owner_name_valid or not owner_email_valid or not owner_phone_ext_valid:
+            return render_template("edit_owner.html", user=current_user, owner=owner)
+
         owner.email = email
         owner.first_name = first_name
         owner.last_name = last_name
@@ -269,6 +274,13 @@ def edit_vendor(id):
         name = request.form.get('name')
         phone = request.form.get('phone')
         email = request.form.get('email')
+
+        vendor_name_valid = Validate.generic_entry(name)
+        vendor_phone_valid = Validate.phone_number(phone)
+        vendor_email_valid = Validate.email(email)
+
+        if not vendor_name_valid or not vendor_phone_valid or not vendor_email_valid:
+            return render_template("edit_vendor.html", user=current_user, vendor=vendor)
 
         vendor.name = name
         vendor.phone = phone

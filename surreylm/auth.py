@@ -6,6 +6,7 @@ from .database_models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db  ##means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
+from .validations import Validate
 
 auth = Blueprint('auth', __name__)  # Creating a blueprint for the auth routes.
 
@@ -48,16 +49,15 @@ def sign_up():
         password2 = request.form.get('password2')
 
         user = User.query.filter_by(email=email).first()
+
+        people_name_valid = Validate.people_name(first_name, last_name)
+        password_valid = Validate.password(password1, password2, first_name, last_name)
+        email_valid = Validate.email(email)
+
         if user:
             flash('Email already exists.', category='error')
-        elif len(email) < 4:
-            flash('Email must be greater than 3 characters.', category='error')
-        elif len(first_name) < 2:
-            flash('First name must be greater than 1 character.', category='error')
-        elif password1 != password2:
-            flash('Passwords don\'t match.', category='error')
-        elif len(password1) < 7:
-            flash('Password must be at least 7 characters.', category='error')
+        elif not email_valid or not password_valid or not people_name_valid:
+            return render_template("register.html", user=current_user)
         else:
             new_user = User(email=email, first_name=first_name, last_name=last_name,
                             password=generate_password_hash(password1, method='sha256'))
