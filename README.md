@@ -53,6 +53,11 @@ pip install -r requirements.txt
 ```
 FLASK_APP=main.py flask run 
 ```
+* If you want to run the tests cd to the directory above 'surreylm' and run:
+```
+pip install pytest
+pytest surreylm/test/test_surreylm.py
+```
 
 ## Help
 
