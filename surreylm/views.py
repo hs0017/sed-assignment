@@ -286,7 +286,7 @@ def edit_vendor(id):
         vendor.phone = phone
         vendor.email = email
         db.session.commit()
-        flash('Manufacturer updated!', category='success')
+        flash('Vendor updated!', category='success')
         return redirect(url_for('views.view_vendor', id=id))
     return render_template("edit_vendor.html", user=current_user, vendor=vendor)
 
@@ -355,5 +355,5 @@ def delete_vendor(id):
             flash('Vendor cannot be deleted because it is attached to existing software.', category='error')
             return redirect(url_for('views.all_vendors'))
     else:
-        flash('You do not have permission to delete manufacturers.', category='error')
+        flash('You do not have permission to delete vendors.', category='error')
         return redirect(url_for('views.all_vendors'))

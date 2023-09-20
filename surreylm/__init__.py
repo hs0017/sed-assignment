@@ -10,14 +10,14 @@ db = SQLAlchemy()
 DB_NAME = "lmdatabase.db"
 
 
-def create_app():
+def create_app(database_uri='sqlite:///lmdatabase.db'):
     """
     This function is used to create the flask app and the database.
     :return: Returns the flask app.
     """
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'gdwjama bbawdjkwjdw'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
     db.init_app(app)
 
     from .views import views

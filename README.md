@@ -6,7 +6,7 @@ Surrey License Management System.
 
 SurreyLM is a web-based software application for managing software licenses built for the University of Surrey. 
 
-Many commercial software licenses require yearly renewal, so it can become difficult to keep track of these if your organisation has lots of packages. This is where SurreyLM can help!
+Many commercial software licenses require yearly renewal, so it can become difficult to keep track of these if your organisation has lots of different software packages. This is where SurreyLM can help!
 
 ## Getting Started
 
@@ -31,15 +31,27 @@ Python3.11 with the following modules:
 
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
-
-### Executing program
-
-* How to run the program
-* Step-by-step bullets
+* Clone the repository to your local machine
+* cd into the cloned 'surreylm' directory
+* Install virtualenv:
 ```
-code blocks for commands
+pip install virtualenv
+```
+* Create a virtual environment:
+```
+virtualenv venv
+```
+* Activate the virtual environment:
+```
+source venv/bin/activate
+```
+* Run the following command to install the dependencies:
+```
+pip install -r requirements.txt
+```
+* Run the following command to start the application:
+```
+FLASK_APP=main.py flask run 
 ```
 
 ## Help
