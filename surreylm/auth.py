@@ -22,15 +22,30 @@ def login():
         password = request.form.get('password')
 
         user = User.query.filter_by(email=email).first()
-        if user:
+        if user and not user.locked:
             if check_password_hash(user.password, password):
                 flash('Welcome to the License Management System!', category='success')
                 login_user(user, remember=True)
+                user.failed_login_attempts = 0
+                db.session.commit()
                 return redirect(url_for('views.home'))
             else:
-                flash('Incorrect password, try again.', category='error')
+                flash('Incorrect login details, please try again or contact your system administrator.',
+                      category='error')
+                user.failed_login_attempts += 1
+                db.session.commit()
+                if user.failed_login_attempts >= 3:
+                    user.locked = True
+                    db.session.commit()
+                    flash('Incorrect login details, please try again or contact your system administrator.',
+                          category='error')
         else:
-            flash('Email does not exist.', category='error')
+            if user and user.locked:
+                flash('Incorrect login details, please try again or contact your system administrator.',
+                      category='error')
+            else:
+                flash('Incorrect login details, please try again or contact your system administrator.',
+                      category='error')
 
     return render_template("login.html", user=current_user)
 
@@ -60,7 +75,7 @@ def sign_up():
             return render_template("register.html", user=current_user)
         else:
             new_user = User(email=email, first_name=first_name, last_name=last_name,
-                            password=generate_password_hash(password1, method='sha256'))
+                            password=generate_password_hash(password1, method='sha512'))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)

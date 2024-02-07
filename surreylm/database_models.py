@@ -16,7 +16,8 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.Text, nullable=False)
     password = db.Column(db.Text, nullable=False)
     admin = db.Column(db.Boolean, default=False)
-
+    failed_login_attempts = db.Column(db.Integer, default=0)
+    locked = db.Column(db.Boolean, default=False)
 
 class Software_owner(db.Model):
     """
