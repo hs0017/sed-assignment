@@ -10,9 +10,9 @@ from sqlalchemy import func, exc
 from . import db
 from surreylm.database_models import Vendor, Software_owner, Software
 from surreylm.validations import Validate
+from . import create_app
 
-
-views = Blueprint('views', __name__) # Creates a Blueprint object called 'views'.
+views = Blueprint('views', __name__)  # Creates a Blueprint object called 'views'.
 
 
 @views.route('/')
@@ -60,6 +60,8 @@ def edit_software(id):
         software_version_valid = Validate.generic_entry(version)
 
         if not software_name_valid or not software_version_valid:
+            create_app().logger.info(f'{current_user} failed to update software record {software.id} because input '
+                                     f'validation checks failed.')
             return render_template("edit_software.html", user=current_user, software=software,
                                    vendors=vendors, owners=owners, current_vendor=current_vendor,
                                    current_owner=current_owner, current_date=current_date,
@@ -72,6 +74,7 @@ def edit_software(id):
             software.license_expiry = converted_date
             software.vendor_id = vendor
             software.owner_id = owner
+            create_app().logger.info(f'Software record {software.id} hs been updated by- {current_user.email}.')
             db.session.commit()
             flash('Software updated!', category='success')
             return redirect(url_for('views.home'))
@@ -105,6 +108,7 @@ def add_vendor():
         else:
             new_vendor = Vendor(name=name, phone=phone, email=email)
             db.session.add(new_vendor)
+            create_app().logger.info(f'New vendor {name} added by- {current_user.email}.')
             db.session.commit()
             flash('Vendor added!', category='success')
             return redirect(url_for('views.home'))
@@ -138,6 +142,7 @@ def add_owner():
             new_owner = Software_owner(email=email, first_name=first_name, last_name=last_name,
                                        phone_extension=phone_extension)
             db.session.add(new_owner)
+            create_app().logger.info(f'New owner {first_name} {last_name} added by - {current_user.email}.')
             db.session.commit()
             flash('Owner added!', category='success')
             return redirect(url_for('views.home'))
@@ -178,6 +183,7 @@ def add_software():
             new_software = Software(name=name, version=version, license_expiry=converted_date, vendor_id=vendor,
                                     owner_id=owner)
             db.session.add(new_software)
+            create_app().logger.info(f'New software {name} added by- {current_user.email}.')
             db.session.commit()
             flash('Software added!', category='success')
             return redirect(url_for('views.home'))
@@ -195,11 +201,14 @@ def delete_software(id):
     software = Software.query.get_or_404(id)
     if current_user.admin:  # Checks if the current user is an admin.
         db.session.delete(software)
+        create_app().logger.info(f'Software record {software.id} has been deleted by- {current_user.email}.')
         db.session.commit()
         flash('Software deleted!', category='success')
         return redirect(url_for('views.home'))
     else:
         flash('You do not have permission to delete software.', category='error')
+        create_app().logger.warning(f'{current_user.email} - Attempt to delete software record {software.id} failed '
+                                 f'due to insufficient permissions.')
         return redirect(url_for('views.home'))
 
 
@@ -255,6 +264,7 @@ def edit_owner(id):
         owner.first_name = first_name
         owner.last_name = last_name
         owner.phone_extension = phone_extension
+        create_app().logger.info(f'Owner record {owner.id} has been updated by- {current_user.email}.')
         db.session.commit()
         flash('Owner updated!', category='success')
         return redirect(url_for('views.view_owner', id=id))
@@ -285,6 +295,7 @@ def edit_vendor(id):
         vendor.name = name
         vendor.phone = phone
         vendor.email = email
+        create_app().logger.info(f'Vendor record {vendor.id} has been updated by- {current_user.email}.')
         db.session.commit()
         flash('Vendor updated!', category='success')
         return redirect(url_for('views.view_vendor', id=id))
@@ -314,14 +325,19 @@ def delete_owner(id):
     if current_user.admin:  # Checks if the current user is an admin.
         try:
             db.session.delete(owner)
+            create_app().logger.info(f'Owner record {owner.id} has been deleted by- {current_user.email}.')
             db.session.commit()
             flash('Owner deleted!', category='success')
             return redirect(url_for('views.all_owners'))
         except exc.IntegrityError:  # Handles the error if the owner is attached to existing software.
             flash('Owner cannot be deleted as they own existing software.', category='error')
+            create_app().logger.warning(f'{current_user.email} - Attempt to delete owner record {owner.id} failed due'
+                                        f' to being attached to existing software record.')
             return redirect(url_for('views.all_owners'))
     else:
         flash('You do not have permission to delete owners.', category='error')
+        create_app().logger.warning(f'{current_user.email} - Attempt to delete owner record {owner.id} failed due to '
+                                    f'insufficient permissions.')
         return redirect(url_for('views.all_owners'))
 
 
@@ -348,12 +364,33 @@ def delete_vendor(id):
     if current_user.admin:  # Checks if the current user is an admin.
         try:
             db.session.delete(vendor)
+            create_app().logger.info(f'Vendor record {vendor.id} has been deleted by- {current_user.email}.')
             db.session.commit()
             flash('Vendor deleted!', category='success')
             return redirect(url_for('views.all_vendors'))
         except exc.IntegrityError:  # Handles the error if the vendor is attached to existing software.
             flash('Vendor cannot be deleted because it is attached to existing software.', category='error')
+            create_app().logger.warning(f'{current_user.email} - Attempt to delete vendor record {vendor.id} failed due '
+                                        f'to being attached to existing software record.')
             return redirect(url_for('views.all_vendors'))
     else:
         flash('You do not have permission to delete vendors.', category='error')
+        create_app().logger.warning(f'{current_user.email} - Attempt to delete vendor record {vendor.id} failed due to '
+                                    f'insufficient permissions.')
         return redirect(url_for('views.all_vendors'))
+
+@views.route('/logs', methods=['GET', 'POST'])
+@login_required
+def logs():
+    """
+    This function is used to view the application logs.
+    :return: Returns the logs page, currently logged-in user.
+    """
+    if current_user.admin:
+        with open('record.log', 'r') as file:
+            logs = file.readlines()
+        return render_template("logs.html", user=current_user, logs=logs)
+    else:
+        flash('You do not have permission to view logs.', category='error')
+        create_app().logger.warning(f'{current_user.email} - Attempt to view logs failed due to insufficient permissions.')
+        return redirect(url_for('views.home'))

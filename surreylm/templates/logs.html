@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Logs{% endblock %}
+
+{% block content %}
+
+    <h1>Admin Logs</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Log Messages</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+                <tr>
+                    <td>{{ log }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

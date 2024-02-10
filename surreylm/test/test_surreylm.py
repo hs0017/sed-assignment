@@ -40,7 +40,7 @@ def test_login_post_invalid(client):
     response = client.post("/login", data={"email": "amylang@gmail.com", "password": "Pandabear55"},
                            follow_redirects=True)
     assert response.status_code == 200
-    assert b"Email does not exist." in response.data
+    assert b"Incorrect login details, please try again or contact your system administrator." in response.data
     assert response.request.path == "/login"
 
 

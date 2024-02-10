@@ -32,6 +32,9 @@
           <a class="nav-item nav-link" id="home" href="/">Licenses</a>
           <a class="nav-item nav-link" id="all_owners"  href="/all_owners">Owners</a>
           <a class="nav-item nav-link" id="all_vendors" href="/all_vendors">Vendors</a>
+              {% if current_user.admin %}
+                <a class="nav-item nav-link" id="logs" href="/logs">Logs</a>
+                {% endif %}
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmlogoutModal">
             Logout
           </button>

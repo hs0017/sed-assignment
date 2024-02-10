@@ -5,6 +5,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+import logging
 
 db = SQLAlchemy()
 DB_NAME = "lmdatabase.db"
@@ -15,6 +16,8 @@ def create_app(database_uri='sqlite:///lmdatabase.db'):
     This function is used to create the flask app and the database.
     :return: Returns the flask app.
     """
+    logging.basicConfig(filename='record.log',
+                        level=logging.INFO, format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'gdwjama bbawdjkwjdw'
     app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
@@ -45,6 +48,7 @@ def create_app(database_uri='sqlite:///lmdatabase.db'):
         :return: Returns the user object.
         """
         return User.query.get(int(id))
+
     return app
 
 

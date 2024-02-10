@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 from .validations import Validate
+from . import create_app
 
 auth = Blueprint('auth', __name__)  # Creating a blueprint for the auth routes.
 
@@ -26,24 +27,30 @@ def login():
             if check_password_hash(user.password, password):
                 flash('Welcome to the License Management System!', category='success')
                 login_user(user, remember=True)
+                create_app().logger.info(f'{user.email} - Logged in successfully.')
                 user.failed_login_attempts = 0
                 db.session.commit()
                 return redirect(url_for('views.home'))
             else:
                 flash('Incorrect login details, please try again or contact your system administrator.',
                       category='error')
+                create_app().logger.info(f'{user.email} - Invalid password entered.')
                 user.failed_login_attempts += 1
                 db.session.commit()
                 if user.failed_login_attempts >= 3:
+                    create_app().logger.info(f'{user.email} - Incorrect password attempts exceeded 3.'
+                                             f'Account has been locked.')
                     user.locked = True
                     db.session.commit()
                     flash('Incorrect login details, please try again or contact your system administrator.',
                           category='error')
         else:
             if user and user.locked:
-                flash('Incorrect login details, please try again or contact your system administrator.',
+                create_app().logger.info(f'{email} - Account locked login attempt failed.')
+                flash('Account has been locked, please contact your system administrator.',
                       category='error')
             else:
+                create_app().logger.info(f'{email} - Invalid email login attempt failed.')
                 flash('Incorrect login details, please try again or contact your system administrator.',
                       category='error')
 
@@ -78,6 +85,7 @@ def sign_up():
                             password=generate_password_hash(password1, method='sha512'))
             db.session.add(new_user)
             db.session.commit()
+            create_app().logger.info(f'{email} - Account created.')
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
@@ -91,5 +99,6 @@ def logout():
     This function is used to logout the user.
     :return: Returns a redirect to the login page.
     """
+    create_app().logger.info(f'{current_user.email} - Logged out.')
     logout_user()
     return redirect(url_for('auth.login'))
