@@ -3,15 +3,17 @@
 # Importing the required modules.
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
+import os
 from flask_login import LoginManager
 import logging
 
 db = SQLAlchemy()
-DB_NAME = "lmdatabase.db"
+DB_NAME = "surreylm-mysqldb"
+db_username = os.environ["db_username"]
+db_password = os.environ["db_password"]
 
 
-def create_app(database_uri='sqlite:///lmdatabase.db'):
+def create_app(database_uri='mysql://{db_username}:{db_password}@surreylm-db.mysql.database.azure.com:3306/{DB_NAME}'):
     """
     This function is used to create the flask app and the database.
     :return: Returns the flask app.
@@ -19,7 +21,7 @@ def create_app(database_uri='sqlite:///lmdatabase.db'):
     logging.basicConfig(filename='record.log',
                         level=logging.INFO, format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'gdwjama bbawdjkwjdw'
+    app.config['SECRET_KEY'] = os.environ["secret_key"]
     app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
     db.init_app(app)
 
@@ -52,11 +54,11 @@ def create_app(database_uri='sqlite:///lmdatabase.db'):
     return app
 
 
-def create_database(app):
-    """
-    This function is used to create the database if it doesn't exist.
-    :param app: The flask app.
-    """
-    if not path.exists('surreylm/' + DB_NAME):
-        db.create_all(app=app)
-        print('Created Database!')
+#def create_database(app):
+#    """
+#    This function is used to create the database if it doesn't exist.
+#    :param app: The flask app.
+#    """
+#    if not path.exists('surreylm/' + DB_NAME):
+#        db.create_all(app=app)
+#        print('Created Database!')
