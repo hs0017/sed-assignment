@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.VARCHAR(50), unique=True, nullable=False)
     first_name = db.Column(db.VARCHAR(50), nullable=False)
     last_name = db.Column(db.VARCHAR(50), nullable=False)
-    password = db.Column(db.VARCHAR(50), nullable=False)
+    password = db.Column(db.VARCHAR(128), nullable=False)
     admin = db.Column(db.Boolean, default=False)
     failed_login_attempts = db.Column(db.Integer, default=0)
     locked = db.Column(db.Boolean, default=False)
