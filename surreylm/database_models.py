@@ -11,10 +11,10 @@ class User(db.Model, UserMixin):
     """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.Text, unique=True, nullable=False)
-    first_name = db.Column(db.Text, nullable=False)
-    last_name = db.Column(db.Text, nullable=False)
-    password = db.Column(db.Text, nullable=False)
+    email = db.Column(db.VARCHAR(50), unique=True, nullable=False)
+    first_name = db.Column(db.VARCHAR(50), nullable=False)
+    last_name = db.Column(db.VARCHAR(50), nullable=False)
+    password = db.Column(db.VARCHAR(50), nullable=False)
     admin = db.Column(db.Boolean, default=False)
     failed_login_attempts = db.Column(db.Integer, default=0)
     locked = db.Column(db.Boolean, default=False)
@@ -25,10 +25,10 @@ class Software_owner(db.Model):
     """
     __tablename__ = 'software_owners'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.Text, unique=True, nullable=False)
-    first_name = db.Column(db.Text, nullable=False)
-    last_name = db.Column(db.Text, nullable=False)
-    phone_extension = db.Column(db.Text, nullable=False)
+    email = db.Column(db.VARCHAR(50), unique=True, nullable=False)
+    first_name = db.Column(db.VARCHAR(50), nullable=False)
+    last_name = db.Column(db.VARCHAR(50), nullable=False)
+    phone_extension = db.Column(db.VARCHAR(50), nullable=False)
 
 
 class Vendor(db.Model):
@@ -37,9 +37,9 @@ class Vendor(db.Model):
     """
     __tablename__ = 'vendors'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text, unique=True, nullable=False)
-    phone = db.Column(db.Text, nullable=False)
-    email = db.Column(db.Text, nullable=False)
+    name = db.Column(db.VARCHAR(50), unique=True, nullable=False)
+    phone = db.Column(db.VARCHAR(50), nullable=False)
+    email = db.Column(db.VARCHAR(50), nullable=False)
 
 
 class Software(db.Model):
@@ -48,8 +48,8 @@ class Software(db.Model):
     """
     __tablename__ = 'software'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text, nullable=False)
-    version = db.Column(db.Text, nullable=False)
+    name = db.Column(db.VARCHAR(50), nullable=False)
+    version = db.Column(db.VARCHAR(50), nullable=False)
     license_expiry = db.Column(db.DateTime, nullable=False)
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendors.id'), nullable=False)
     vendor = db.relationship('Vendor', backref='software')
