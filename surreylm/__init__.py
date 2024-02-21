@@ -63,5 +63,6 @@ def create_database(app):
     """
     engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
     if not sqlalchemy.inspect(engine).has_table('users'):
-        db.create_all(app=app)
-        print('Created Database!')
+        with app.app_context():
+            db.create_all(app=app)
+            print('Created Database!')
