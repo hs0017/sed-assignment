@@ -14,7 +14,7 @@ db_password = os.environ["db_password"]
 ca_cert = os.environ["ca_cert"]
 
 
-def create_app(database_uri=f'mysql+mysqlconnector://{db_username}:{db_password}@surreylm-db.mysql.database.azure.com:3306/{DB_NAME}?ssl_ca={ca_cert}&ssl_disabled=False$ssl_mode=REQUIRED'):
+def create_app(database_uri=f'mysql+mysqlconnector://{db_username}:{db_password}@surreylm-db.mysql.database.azure.com:3306/{DB_NAME}?ssl_ca={ca_cert}&ssl_mode=REQUIRED'):
     """
     This function is used to create the flask app and the database.
     :return: Returns the flask app.
