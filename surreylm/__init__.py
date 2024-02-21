@@ -1,11 +1,12 @@
 # Purpose: This file is the main file for the surreylm package. It is used to create the flask app and the database.
-
+import sqlalchemy
 # Importing the required modules.
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
 from flask_login import LoginManager
 import logging
+from sqlalchemy import create_engine
 
 db = SQLAlchemy()
 DB_NAME = "surreylm-mysqldb"
@@ -55,11 +56,12 @@ def create_app(database_uri=f'mysql+mysqlconnector://{db_username}:{db_password}
     return app
 
 
-#def create_database(app):
-#    """
-#    This function is used to create the database if it doesn't exist.
-#    :param app: The flask app.
-#    """
-#    if not path.exists('surreylm/' + DB_NAME):
-#        db.create_all(app=app)
-#        print('Created Database!')
+def create_database(app):
+    """
+    This function is used to create the database if it doesn't exist.
+    :param app: The flask app.
+    """
+    engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+    if not sqlalchemy.inspect(engine).has_table('users'):
+        db.create_all(app=app)
+        print('Created Database!')
