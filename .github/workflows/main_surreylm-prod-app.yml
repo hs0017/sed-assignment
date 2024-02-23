@@ -48,13 +48,11 @@ jobs:
     needs: build
     
     steps:
-      - name: Create and start virtual environment
+      - name: Run tests
         run: |
           python -m venv venv
           source venv/bin/activate
-            
-      - name: Run unit tests
-        run: pytest surreylm/test/test_surreylm.py 
+          pytest surreylm/test/test_surreylm.py
         env:
           db_connection_string: 'sqlite:///:memory:'
 
