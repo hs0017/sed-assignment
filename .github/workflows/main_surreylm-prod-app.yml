@@ -52,6 +52,7 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
+          pip install -r requirements.txt
           pytest surreylm/test/test_surreylm.py
         env:
           db_connection_string: 'sqlite:///:memory:'
