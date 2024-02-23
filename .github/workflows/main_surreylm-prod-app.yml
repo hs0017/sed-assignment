@@ -43,6 +43,15 @@ jobs:
             release.zip
             !venv/
 
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Run unit tests
+        run: pytest surreylm/test/test_surreylm.py 
+        environment: db_connection_string: sqlite:///:memory: 
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
