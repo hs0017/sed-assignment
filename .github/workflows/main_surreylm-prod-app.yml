@@ -53,10 +53,10 @@ jobs:
           python -m venv venv
           source venv/bin/activate
             
-        - name: Run unit tests
-          run: pytest surreylm/test/test_surreylm.py 
-          env:
-            db_connection_string: 'sqlite:///:memory:'
+      - name: Run unit tests
+        run: pytest surreylm/test/test_surreylm.py 
+        env:
+          db_connection_string: 'sqlite:///:memory:'
 
   deploy:
     runs-on: ubuntu-latest
