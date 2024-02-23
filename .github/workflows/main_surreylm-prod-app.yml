@@ -50,7 +50,8 @@ jobs:
     steps:
       - name: Run unit tests
         run: pytest surreylm/test/test_surreylm.py 
-        environment: db_connection_string: sqlite:///:memory: 
+        environment:
+          db_connection_string: sqlite:///:memory:
 
   deploy:
     runs-on: ubuntu-latest
