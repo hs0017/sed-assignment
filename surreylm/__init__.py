@@ -9,13 +9,10 @@ import logging
 from sqlalchemy import create_engine
 
 db = SQLAlchemy()
-DB_NAME = "surreylm-mysqldb"
-db_username = os.environ["db_username"]
-db_password = os.environ["db_password"]
-ca_cert = os.environ["ca_cert"]
+db_connection_string = os.environ["db_connection_string"]
 
 
-def create_app(database_uri=f'mysql+mysqlconnector://{db_username}:{db_password}@surreylm-db.mysql.database.azure.com:3306/{DB_NAME}?ssl_ca={ca_cert}&ssl_disabled=False'):
+def create_app(database_uri=f'{db_connection_string}'):
     """
     This function is used to create the flask app and the database.
     :return: Returns the flask app.

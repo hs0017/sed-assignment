@@ -5,9 +5,10 @@ from surreylm import db
 from surreylm.database_models import User, Software_owner, Vendor, Software
 
 
+
 @pytest.fixture()
 def app():
-    app = create_app("sqlite:///:memory:")  # Creating the flask app with an in-memory database.
+    app = create_app()  # Creating the flask app with an in-memory database.
     with app.app_context():
         db.create_all()
     app.config.update({"TESTING": True})
@@ -409,3 +410,8 @@ def test_logout(client, app):
     assert response.status_code == 200
     assert b"Login" in response.data
     assert response.request.path == "/login"    # should redirect to login page
+
+
+def test_1(client, app):
+    with app.app_context():
+        print(app.config['SQLALCHEMY_DATABASE_URI'])
