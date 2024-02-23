@@ -48,6 +48,13 @@ jobs:
     needs: build
     
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.11'
+          
       - name: Run tests
         run: |
           python -m venv venv
