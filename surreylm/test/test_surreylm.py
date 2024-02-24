@@ -410,8 +410,3 @@ def test_logout(client, app):
     assert response.status_code == 200
     assert b"Login" in response.data
     assert response.request.path == "/login"    # should redirect to login page
-
-
-def test_1(client, app):
-    with app.app_context():
-        print(app.config['SQLALCHEMY_DATABASE_URI'])
