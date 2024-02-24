@@ -62,7 +62,7 @@ jobs:
           pytest surreylm/test/test_surreylm.py
         env:
           db_connection_string: 'sqlite:///:memory:'
-          secret_key: 'supersecretkey65736352'
+          secret_key: ${{ secrets.SECRET_KEY }}
 
   deploy:
     runs-on: ubuntu-latest
