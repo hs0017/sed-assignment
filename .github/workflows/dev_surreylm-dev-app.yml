@@ -85,5 +85,5 @@ jobs:
         id: deploy-to-webapp
         with:
           app-name: 'surreylm-dev-app'
-          slot-name: 'Development'
+          slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8FD11F7F033E49A6B68D8FE1F4CA9179 }}
