@@ -42,7 +42,7 @@ jobs:
             release.zip
             !venv/
 
-    test:
+  test:
     runs-on: ubuntu-latest
     needs: build
     
