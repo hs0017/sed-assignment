@@ -82,7 +82,7 @@ def sign_up():
             return render_template("register.html", user=current_user)
         else:
             new_user = User(email=email, first_name=first_name, last_name=last_name,
-                            password=generate_password_hash(password1, method='sha512'))
+                            password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
             create_app().logger.info(f'{email} - Account created.')
